@@ -268,6 +268,73 @@ hỏi triệu chứng cơ bản và gợi ý chuyên khoa phù hợp.
 
 ---
 
+## Python / LangGraph (prototype) — cài đặt nhanh
+
+1. **Python** 3.10+ (khuyến nghị 3.11+).
+2. **Virtualenv** (từ thư mục gốc repo):
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+
+   Windows (PowerShell): `.\.venv\Scripts\Activate.ps1`
+
+3. **Cài package**: `pip install -r requirements.txt`
+4. **Biến môi trường**: `cp .env.example .env` rồi điền `DATABASE_URL` và/hoặc `GOOGLE_API_KEY` (tùy bạn muốn test phần nào).
+5. **PostgreSQL** (khi dùng checkpoint): URI dạng `postgresql://user:pass@host:5432/dbname`. Lần chạy đầu với `PostgresSaver`, `main.py` gọi `setup()` để tạo bảng checkpoint.
+6. **Thư mục `tools/`**: stub cho tool agent ↔ DB sau này; chưa có logic thật.
+
+**Phiên bản gói:** `requirements.txt` căn theo **LangGraph 1.0.x** và **`langgraph-checkpoint-postgres`** (import `from langgraph.checkpoint.postgres import PostgresSaver`, `PostgresSaver.from_conn_string`, `.setup()`), cùng **`langchain-google-genai`** + model Gemini mặc định `gemini-2.5-flash` như tài liệu hiện tại của LangChain Google.
+
+---
+
+## Kiểm tra init (đảm bảo hoạt động đúng)
+
+Làm từ **thư mục gốc** repo, **venv đã bật** (`source .venv/bin/activate`).
+
+### Bước 1 — Import và phiên bản gói
+
+```bash
+python -c "from langgraph.checkpoint.postgres import PostgresSaver; from langchain_google_genai import ChatGoogleGenerativeAI; print('imports OK')"
+```
+
+- **Pass**: in `imports OK` và không traceback.
+- **Lỗi** `No module named 'langgraph.checkpoint.postgres'`: cài thêm checkpoint Postgres — `pip install langgraph-checkpoint-postgres` (đã có trong `requirements.txt`; chạy lại `pip install -r requirements.txt`).
+
+### Bước 2 — Chạy demo tích hợp (`main.py`)
+
+```bash
+python main.py
+```
+
+**Kịch bản A — Chưa cấu hình `.env` (hoặc trống key):**
+
+- Thấy `DATABASE_URL not set` và/hoặc `GOOGLE_API_KEY not set`.
+- **Bắt buộc pass**: dòng `Graph result (no checkpointer):` với `{'text': 'ab'}` (graph tối thiểu `node_a` → `node_b`).
+
+**Kịch bản B — Có `DATABASE_URL` và Postgres chạy, DB tồn tại:**
+
+- Thấy `connection OK: True`.
+- Thấy `Graph result (with PostgresSaver):` cùng kết quả state (ví dụ `text` kết thúc bằng `ab`).
+- **Nếu** `connection OK: False`: kiểm tra Postgres đã bật, user/password/database đúng, firewall/port `5432`.
+
+**Kịch bản C — Có `GOOGLE_API_KEY` (Gemini):**
+
+- Sau phần graph, thấy dòng `Gemini:` với nội dung trả lời ngắn.
+- **Lỗi API key / quota**: xem thông báo từ thư viện; xác nhận key tại [Google AI Studio](https://aistudio.google.com/apikey).
+
+### Bước 3 — Stub `tools/` (chỉ xác nhận package import được)
+
+```bash
+python -c "from tools.database import fetch_rows_stub"
+```
+
+- **Pass**: không in gì, thoát code 0.
+- **Kịch bản kiểm tra “chưa implement”** (tùy chọn): `python -c "from tools.database import fetch_rows_stub; fetch_rows_stub('SELECT 1')"` → phải raise `NotImplementedError` (đúng thiết kế stub).
+
+---
+
 ## Rời lớp Day 5, mỗi nhóm phải có
 
 1. Track đã chọn (VinFast / Vinmec / VinUni-VinSchool / XanhSM / Open)
