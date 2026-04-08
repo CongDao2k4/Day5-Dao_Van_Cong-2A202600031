@@ -3,7 +3,21 @@
 Theo dõi **ai làm phần nào** và **tiến độ** sau khi nhóm phân công. Cập nhật cột **Trạng thái**, **Hạn** và **Ghi chú** khi làm việc.
 
 **Nhóm:** C401 - D5  
-**Cập nhật lần cuối:** _(điền ngày)_
+**Cập nhật lần cuối:** 08/04/2026
+
+---
+
+## Danh sách thành viên
+
+| Họ tên | MSSV |
+|--------|------|
+| Đào Phước Thịnh | 2A202600029 |
+| Nguyễn Tri Nhân | 2A202600224 |
+| Trần Xuân Trường | 2A202600321 |
+| Hồ Sỹ Minh Hà | 2A202600060 |
+| Nông Nguyễn Thành | 2A202600250 |
+| Đào Văn Công | 2A202600031 |
+| Đặng Hồ Hải | 2A202600020 |
 
 ---
 
