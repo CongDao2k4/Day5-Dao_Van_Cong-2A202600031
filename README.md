@@ -19,7 +19,24 @@
 - Nông Nguyễn Thành — 2A202600250
 - Đào Văn Công — 2A202600031
 
-Báo cáo Canvas đầy đủ: [`group_report/neo-canvas-report.md`](group_report/neo-canvas-report.md)
+### Báo cáo nhóm — [`group_report/`](group_report/)
+
+| File | Mô tả |
+|------|--------|
+| [`neo-canvas-report.md`](group_report/neo-canvas-report.md) | Báo cáo Canvas |
+| [`spec-draft-vinuni-vinschool.md`](group_report/spec-draft-vinuni-vinschool.md) | SPEC draft (track VinUni / VinSchool) |
+| [`assignment-tracking.md`](group_report/assignment-tracking.md) | Theo dõi phân công / tiến độ |
+
+### Báo cáo cá nhân — [`individual_reports/`](individual_reports/)
+
+| Thành viên | Mã HV | Thư mục & file |
+|------------|-------|----------------|
+| Đào Phước Thịnh | 2A202600029 | [`individual_reports/2A202600029_DaoPhuocThinh/`](individual_reports/2A202600029_DaoPhuocThinh/) — [`Analyze_DaoPhuocThinh_2A202600029.md`](individual_reports/2A202600029_DaoPhuocThinh/Analyze_DaoPhuocThinh_2A202600029.md), [`DaoPhuocThinh_2A202600029.pdf`](individual_reports/2A202600029_DaoPhuocThinh/DaoPhuocThinh_2A202600029.pdf) |
+| Nguyễn Tri Nhân | 2A202600224 | [`individual_reports/2A202600224-NguyenTriNhan/`](individual_reports/2A202600224-NguyenTriNhan/) — [`IMG20260408151256.jpg`](individual_reports/2A202600224-NguyenTriNhan/IMG20260408151256.jpg) |
+| Trần Xuân Trường | 2A202600321 | [`individual_reports/2A202600321-TranXuanTruong/`](individual_reports/2A202600321-TranXuanTruong/) — [`01.jpg`](individual_reports/2A202600321-TranXuanTruong/01.jpg), [`02.jpg`](individual_reports/2A202600321-TranXuanTruong/02.jpg) |
+| Hồ Sỹ Minh Hà | 2A202600060 | [`individual_reports/HoSyMinhHa-2A202600060/`](individual_reports/HoSyMinhHa-2A202600060/) — [`Momo-1.jpeg`](individual_reports/HoSyMinhHa-2A202600060/Momo-1.jpeg), [`Momo-2.jpeg`](individual_reports/HoSyMinhHa-2A202600060/Momo-2.jpeg) |
+| Nông Nguyễn Thành | 2A202600250 | [`individual_reports/2A202600250-NongNguyenThanh/`](individual_reports/2A202600250-NongNguyenThanh/) — [`neo-airlines-01.jpg`](individual_reports/2A202600250-NongNguyenThanh/neo-airlines-01.jpg), [`neo-airlines-02.jpg`](individual_reports/2A202600250-NongNguyenThanh/neo-airlines-02.jpg) |
+| Đào Văn Công | 2A202600031 | [`individual_reports/2A202600031-DaoVanCong/`](individual_reports/2A202600031-DaoVanCong/) — [`DaoVanCong-2A202600031.pdf`](individual_reports/2A202600031-DaoVanCong/DaoVanCong-2A202600031.pdf) |
 
 ---
 
