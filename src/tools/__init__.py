@@ -1,3 +1,5 @@
-from .email import email_draft_tool, email_sender_tool
+"""Agent-facing tools (database stubs, email, …)."""
 
-__all__ = ['email_draft_tool', 'email_sender_tool']
+from tools.email import EMAIL_TOOLS, send_email
+
+__all__ = ['EMAIL_TOOLS', 'send_email']
