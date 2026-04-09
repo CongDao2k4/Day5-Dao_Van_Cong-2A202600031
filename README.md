@@ -1,8 +1,15 @@
-# C401 - D5
+# C401 — D5 · StudentOps (backend)
 
-# Ngày 5 — Thiết kế sản phẩm AI cho sự không chắc chắn
+Backend FastAPI + LangGraph cho prototype **StudentOps** (VinUni / VinSchool).
 
-> AI chạy được chưa phải product. Hôm nay học cách thiết kế cho uncertainty — khi AI có thể sai, UI phải xử lý thế nào?
+| Artefact | Vị trí |
+|----------|--------|
+| Báo cáo nhóm | [`group_report/`](group_report/) |
+| SPEC nhóm (draft) | [`group_report/spec-draft-vinuni-vinschool.md`](group_report/spec-draft-vinuni-vinschool.md) |
+| SPEC nhóm (final) | [`group_report/spec-final-vinuni-vinschool.md`](group_report/spec-final-vinuni-vinschool.md) |
+| Báo cáo cá nhân | [`individual_reports/`](individual_reports/) |
+| HTTP API (contract, Swagger `/docs`) | [`docs/langgraph-http-api.md`](docs/langgraph-http-api.md) |
+| **Frontend** | [Day6-C401-D5-FE](https://github.com/RhythmGC/Day6-C401-D5-FE.git) |
 
 ---
 
@@ -10,372 +17,171 @@
 
 **Tên nhóm:** C401 - D5
 
-**Thành viên:**
+Báo cáo cá nhân
 
-- Đào Phước Thịnh — 2A202600029
-- Nguyễn Tri Nhân — 2A202600224
-- Trần Xuân Trường — 2A202600321
-- Hồ Sỹ Minh Hà — 2A202600060
-- Nông Nguyễn Thành — 2A202600250
-- Đào Văn Công — 2A202600031
-
-### Báo cáo nhóm — [`group_report/`](group_report/)
-
-| File | Mô tả |
-|------|--------|
-| [`neo-canvas-report.md`](group_report/neo-canvas-report.md) | Báo cáo Canvas |
-| [`spec-draft-vinuni-vinschool.md`](group_report/spec-draft-vinuni-vinschool.md) | SPEC draft (track VinUni / VinSchool) |
-| [`assignment-tracking.md`](group_report/assignment-tracking.md) | Theo dõi phân công / tiến độ |
-
-### Báo cáo cá nhân — [`individual_reports/`](individual_reports/)
-
-| Thành viên | Mã HV | Thư mục & file |
-|------------|-------|----------------|
-| Đào Phước Thịnh | 2A202600029 | [`individual_reports/2A202600029_DaoPhuocThinh/`](individual_reports/2A202600029_DaoPhuocThinh/) — [`Analyze_DaoPhuocThinh_2A202600029.md`](individual_reports/2A202600029_DaoPhuocThinh/Analyze_DaoPhuocThinh_2A202600029.md), [`DaoPhuocThinh_2A202600029.pdf`](individual_reports/2A202600029_DaoPhuocThinh/DaoPhuocThinh_2A202600029.pdf) |
-| Nguyễn Tri Nhân | 2A202600224 | [`individual_reports/2A202600224-NguyenTriNhan/`](individual_reports/2A202600224-NguyenTriNhan/) — [`IMG20260408151256.jpg`](individual_reports/2A202600224-NguyenTriNhan/IMG20260408151256.jpg) |
-| Trần Xuân Trường | 2A202600321 | [`individual_reports/2A202600321-TranXuanTruong/`](individual_reports/2A202600321-TranXuanTruong/) — [`01.jpg`](individual_reports/2A202600321-TranXuanTruong/01.jpg), [`02.jpg`](individual_reports/2A202600321-TranXuanTruong/02.jpg) |
-| Hồ Sỹ Minh Hà | 2A202600060 | [`individual_reports/HoSyMinhHa-2A202600060/`](individual_reports/HoSyMinhHa-2A202600060/) — [`Momo-1.jpeg`](individual_reports/HoSyMinhHa-2A202600060/Momo-1.jpeg), [`Momo-2.jpeg`](individual_reports/HoSyMinhHa-2A202600060/Momo-2.jpeg) |
-| Nông Nguyễn Thành | 2A202600250 | [`individual_reports/2A202600250-NongNguyenThanh/`](individual_reports/2A202600250-NongNguyenThanh/) — [`neo-airlines-01.jpg`](individual_reports/2A202600250-NongNguyenThanh/neo-airlines-01.jpg), [`neo-airlines-02.jpg`](individual_reports/2A202600250-NongNguyenThanh/neo-airlines-02.jpg) |
-| Đào Văn Công | 2A202600031 | [`individual_reports/2A202600031-DaoVanCong/`](individual_reports/2A202600031-DaoVanCong/) — [`DaoVanCong-2A202600031.pdf`](individual_reports/2A202600031-DaoVanCong/DaoVanCong-2A202600031.pdf) |
+| Thành viên | Mã HV | Thư mục báo cáo |
+|-------------|-------|-----------------|
+| Đào Phước Thịnh | 2A202600029 | `individual_reports/2A202600029_DaoPhuocThinh/` |
+| Nguyễn Tri Nhân | 2A202600224 | `individual_reports/2A202600224-NguyenTriNhan/` |
+| Trần Xuân Trường | 2A202600321 | `individual_reports/2A202600321-TranXuanTruong/` |
+| Hồ Sỹ Minh Hà | 2A202600060 | `individual_reports/HoSyMinhHa-2A202600060/` |
+| Nông Nguyễn Thành | 2A202600250 | `individual_reports/2A202600250-NongNguyenThanh/` |
+| Đào Văn Công | 2A202600031 | `individual_reports/2A202600031-DaoVanCong/` |
 
 ---
 
-## Tổng quan buổi học
+## Bố cục repo (tóm tắt)
 
 ```text
-SÁNG — Lecture + Workshop                   CHIỀU — Lecture + Hackathon kickoff
-┌──────────────────────────────┐            ┌──────────────────────────────┐
-│ AI = probabilistic            │            │ Feedback loop + Data flywheel│
-│ 3 trụ: Requirement · Eval · UX│     →      │ ROI 3 kịch bản               │
-│ UX workshop (cá nhân)         │            │ Hackathon briefing           │
-│ Canvas practice (nhóm)        │            │ Draft SPEC                   │
-└──────────────────────────────┘            └──────────────────────────────┘
-```
-
-**Lecture** dạy framework: AI product khác phần mềm thường vì luôn có sai số. 3 trụ thiết kế: Requirement (precision/recall), Eval (metric + threshold), UX (4 paths khi AI đúng/sai/không chắc/user sửa). Canvas gộp tất cả vào 1 trang.
-
-**Workshop + Practice** cho bạn thực hành trên sản phẩm AI thật (UX exercise) và bắt đầu thiết kế product AI của nhóm (Canvas practice + SPEC draft).
-
----
-
-## Agenda
-
-| Giờ | Hoạt động | Hình thức | Deliverable |
-|-----|-----------|-----------|-------------|
-| 9:00 | Opening — 3 cases thất bại + thesis "AI ≠ phần mềm thường" | Lecture | |
-| 9:15 | Block 1: AI = probabilistic + Automation vs Augmentation | Lecture | |
-| 9:45 | Block 2: 3 trụ — Requirement · Eval · UX | Mixed | |
-| | — Requirement: lecture + Discord "tìm lỗi spec" | Discord (cá nhân, ~3 phút) | |
-| | — Eval: lecture + Discord "precision hay recall?" | Discord (cá nhân, ~3 phút) | |
-| | — **UX workshop:** phân tích sản phẩm AI thật | **Cá nhân** (40 phút) | **Sketch giấy + ghi chú 4 paths** |
-| | — Debrief: kết nối 3 trụ | Lecture | |
-| 11:10 | Break | | |
-| 11:25 | Block 3: Canvas — Value / Trust / Feasibility + learning signal | Lecture | |
-| 12:00 | Canvas practice — sketch Canvas cho project của nhóm + peer peek | Nhóm (25 phút) | |
-| 13:00 | Nghỉ trưa | | |
-| 14:00 | Block 4: Feedback loop + Data flywheel + Qual>Quant | Lecture | |
-| 14:30 | Block 5: ROI 3 kịch bản | Lecture | |
-| 15:00 | Q&A + Buffer | | |
-| 15:30 | Break | | |
-| 16:00 | **Hackathon briefing** + chia nhóm + chọn track + bắt đầu draft SPEC | Nhóm (3–5 người) | |
-| **23h59** | **Deadline 08/04** | Nhóm | **Submit topic + SPEC draft** |
-
----
-
-## Hoạt động chính
-
-### 1. UX workshop — phân tích sản phẩm AI thật (40 phút, cá nhân)
-
-Chọn 1 sản phẩm AI thật (MoMo / Vietnam Airlines / V-App), dùng thử, phân tích theo 4 paths, sketch cải thiện.
-
-**Xem chi tiết:** [`02-ux-exercise.md`](02-ux-exercise.md)
-
-**Output:** mỗi người nộp sketch giấy + ghi chú phân tích 4 paths. Đây là điểm cá nhân.
-
-### 2. Canvas practice (25 phút, nhóm)
-
-Sketch Canvas cho project của nhóm lên giấy A3 hoặc whiteboard. Peer peek: đi xem Canvas nhóm khác, ghi 1 feedback.
-
-**Xem template:** [`03-canvas-template.md`](03-canvas-template.md)
-
-### 3. SPEC draft (từ 16:00 + tối, nhóm)
-
-Bắt đầu viết SPEC cho hackathon. Deadline: 23h59 08/04 Day 5.
-
-SPEC gồm 6 phần: Canvas, User Stories 4 paths, Eval metrics, Failure modes, ROI, Mini AI spec.
-
-**Template SPEC sẽ có trong repo hackathon:** [Day06-AI-Product-Hackathon](https://github.com/VinUni-AI20k/Day06-AI-Product-Hackathon)
-
----
-
-## Deliverables
-
-| # | Deliverable | Loại | Deadline | Nộp ở đâu |
-|---|-------------|------|----------|------------|
-| 1 | **Bài tập UX** — sketch giấy (as-is + to-be) + ghi chú phân tích 4 paths | Cá nhân | Cuối UX workshop (nộp tại lớp) + bản scan/ảnh trong repo | LMS |
-| 2 | **SPEC draft** — topic + Canvas + hướng đi chính | Nhóm | 23:59 08/04/2026 | LMS |
-
----
-
-## Cách tính điểm
-
-Day 5 + Day 6 chấm chung = **100 điểm**.
-
-| Hạng mục | Điểm | Loại | Khi nào |
-|----------|------|------|---------|
-| SPEC milestone | 25 | Nhóm + cá nhân | Draft 23h59 08/04 D5, final 23h59 09/04 |
-| Prototype milestone | 15 | Nhóm + cá nhân | 23h59 09/04 |
-| Demo Day | 25 | Nhóm | Present 16:00, nộp file 23h59 09/04 |
-| **Bài tập UX** | **10** | **Cá nhân + bonus** | **UX workshop sáng D5** |
-| Individual reflection | 25 | Cá nhân | 23h59 09/04 |
-| **Tổng** | **100** | | |
-
-### Bài tập UX (10 điểm + bonus)
-
-| Tiêu chí | Điểm |
-|----------|------|
-| Phân tích 4 paths — đủ + nhận xét path yếu nhất | 4 |
-| Sketch as-is + to-be rõ ràng, có breaking point | 4 |
-| Nhận xét gap giữa marketing và thực tế sử dụng | 2 |
-| **Bonus:** nhóm vote sketch hay nhất | +2 |
-
-### Binary gate
-
-| Tình huống | Hậu quả |
-|-----------|---------|
-| Không nộp SPEC draft trước 23:59 D5 | **-5 điểm** từ tổng SPEC (cả nhóm) |
-
----
-
-## 4 hackathon tracks
-
-| Track | Lĩnh vực | Gợi ý bài toán |
-|-------|----------|----------------|
-| **A** | VinFast | AI chatbot hỗ trợ mua xe/bảo dưỡng, phân tích review |
-| **B** | Vinmec | AI triage, hỏi triệu chứng → gợi ý chuyên khoa |
-| **C** | VinUni/VinSchool | AI tutor, trợ lý học tập, Q&A nội bộ |
-| **D** | XanhSM | AI hỗ trợ tài xế/khách hàng, tối ưu trải nghiệm di chuyển |
-| **E** | Tự chọn | Tự chọn domain, phải justify |
-
-Nhóm 3–5 người, chia zone (~5 team/zone).
-
----
-
-## Hướng dẫn nộp bài
-
-**Deadline:** 23h59 08/04/2026 | **Nộp lên:** LMS | **Nộp link public GitHub repo**
-
-Mỗi người tạo 1 **public repo** trên GitHub, nộp link repo lên LMS.
-
-### Đặt tên repo
-
-```
-MaHocVien-HoTen-Day05
-```
-
-Ví dụ: `AI20K001-NguyenVanA-Day05`
-
-### Cấu trúc repo
-
-```
-AI20K001-NguyenVanA-Day05/
-│
-├── canhan/
-│   ├── ux-exercise/
-│   │   ├── sketch.jpg hoặc sketch.pdf       ← Ảnh chụp/scan sketch giấy (as-is + to-be)
-│   │   └── analysis.md                       ← Ghi chú phân tích 4 paths + gap marketing vs thực tế
-│   │
-│   └── extras/                               ← Tùy chọn — nộp thêm để lấy bonus
-│       └── ...                               ← Reflection, ghi chú cá nhân, screenshot AI conversation,
-│                                                research notes, hoặc bất kỳ output cá nhân nào khác
-│
-└── NhomXX-Room/                              ← Tên nhóm + phòng. VD: Nhom01-403
-    └── spec-draft.md                         ← SPEC draft (file nhóm, mỗi người nộp giống nhau)
-```
-
-### Lưu ý
-
-- Repo phải **public** — GV cần truy cập được để chấm
-- **Folder `canhan/`** chứa bài cá nhân — đây là căn cứ chính cho điểm cá nhân UX exercise (10 điểm)
-- **Folder `canhan/extras/`** không bắt buộc — nộp thêm các output cá nhân khác (reflection, research notes, prompt logs, screenshot...) sẽ được xét **bonus điểm** nếu nội dung có chất lượng
-- **Folder `NhomXX-Room/`** chứa bài nhóm — tên folder phải khớp giữa các thành viên cùng nhóm
-- File nhóm giống nhau giữa các thành viên là bình thường
-- Sketch có thể là ảnh chụp giấy, scan, hoặc ảnh chụp whiteboard — miễn đọc được
-- `analysis.md` viết bằng markdown, không cần format đẹp, cần đủ nội dung
-
----
-
-## Ví dụ bài nộp tốt
-
-### UX exercise — ví dụ analysis.md
-
-```markdown
-# UX exercise — MoMo Moni AI
-
-## Sản phẩm: MoMo — Moni AI Assistant (phân loại chi tiêu)
-
-## 4 paths
-
-### 1. AI đúng
-- User chi tiêu 50k tại Circle K → Moni gợi ý "Ăn uống"
-- User thấy tag đúng, không cần làm gì thêm
-- UI: hiện tag + icon category, không hỏi confirm
-
-### 2. AI không chắc
-- User chuyển tiền 200k cho bạn → Moni không tag hoặc tag "Khác"
-- UI: không hiện gợi ý nào, user phải tự vào chỉnh
-- Vấn đề: không có cơ chế "bạn muốn phân loại giao dịch này không?"
-
-### 3. AI sai
-- User mua sách trên Shopee → Moni tag "Mua sắm" thay vì "Học tập"
-- User phát hiện khi xem báo cáo tháng
-- Sửa: vào chi tiết giao dịch → đổi category → 3 bước
-- Vấn đề: không rõ AI có học từ correction này không
-
-### 4. User mất niềm tin
-- Sau nhiều lần tag sai, user không tin báo cáo chi tiêu tự động nữa
-- Không có option "tắt auto-tag" hoặc "tag thủ công trước"
-- Không có fallback rõ ràng ngoài việc sửa từng giao dịch
-
-## Path yếu nhất: Path 3 + 4
-- Khi AI sai, recovery flow mất quá nhiều bước
-- Không có feedback loop rõ — user sửa nhưng không biết AI có học không
-- Không có exit/fallback cho user mất niềm tin
-
-## Gap marketing vs thực tế
-- Marketing: "Moni giúp quản lý chi tiêu thông minh"
-- Thực tế: auto-tag chỉ đúng ~70% cho giao dịch phổ biến, các trường hợp edge case
-  (chuyển tiền, mua online) thường bị tag sai hoặc không tag
-- Gap lớn nhất: marketing không nói về khi AI sai — user kỳ vọng 100% chính xác
-
-## Sketch
-(Ảnh đính kèm: sketch.jpg)
-- As-is: giao dịch → auto-tag → user thấy kết quả → nếu sai phải vào sửa thủ công
-- To-be: giao dịch → auto-tag → nếu confidence thấp: hiện "Bạn muốn phân loại?"
-  → user chọn → AI ghi nhận correction → hiện "Đã học, lần sau sẽ chính xác hơn"
-```
-
-### SPEC draft — ví dụ spec-draft.md (tối thiểu cần có)
-
-```markdown
-# SPEC draft — Nhom01-403
-
-## Track: Vinmec
-
-## Problem statement
-Bệnh nhân đến Vinmec không biết nên khám chuyên khoa nào. Hiện tại hỏi lễ tân
-hoặc tổng đài, mất 5-10 phút chờ, lễ tân phải tra danh mục thủ công. AI có thể
-hỏi triệu chứng cơ bản và gợi ý chuyên khoa phù hợp.
-
-## Canvas draft
-
-| | Value | Trust | Feasibility |
-|---|-------|-------|-------------|
-| Trả lời | Bệnh nhân mới, không biết chuyên khoa. Pain: chờ 10 phút, chọn sai khoa = khám lại. AI gợi ý top 3 khoa từ triệu chứng. | Nếu gợi ý sai khoa → bệnh nhân mất thời gian + tiền. Phải có option "gặp lễ tân" luôn hiện. | API call ~$0.005/lượt, latency <3s. Risk: triệu chứng mô tả mơ hồ, nhiều khoa overlap. |
-
-**Auto hay aug?** Augmentation — AI gợi ý, bệnh nhân + lễ tân quyết định cuối cùng.
-
-**Learning signal:** bệnh nhân chọn khoa nào sau gợi ý AI → so sánh với khoa thực tế khám → correction signal.
-
-## Hướng đi chính
-- Prototype: chatbot đơn giản hỏi 3-5 câu triệu chứng → gợi ý top 3 khoa + confidence
-- Eval: precision trên top-3 suggestions ≥ 80%
-- Main failure mode: triệu chứng chung chung ("đau bụng") → gợi ý quá rộng
-
-## Phân công
-- An: Canvas + failure modes
-- Bình: User stories 4 paths
-- Châu: Eval metrics + ROI
-- Dũng: Prototype research + prompt test
+C401-D5-Day-05-06/
+├── database/                    # SQL DDL + mock data (không trùng schema với Python — cần khớp nếu agent gọi SQL)
+├── docs/
+│   └── langgraph-http-api.md    # contract HTTP API / Swagger
+├── group_report/                # báo cáo & SPEC nhóm
+├── individual_reports/          # báo cáo cá nhân (theo thư mục từng HV)
+├── scripts/
+│   └── demo.py                  # CLI demo (graph + checkpoint)
+├── src/
+│   ├── api/                     # FastAPI: app.py, schemas, state JSON
+│   ├── graph/                   # build_app: ReAct agent hoặc stub
+│   ├── tools/                   # postgres_readonly (2 DB), email, export
+│   ├── llm/                     # Gemini factory
+│   ├── checkpoints/             # Postgres probe + PostgresSaver
+│   ├── prompts/                 # react_agent_system.txt, v1/planner, v1/sql_generator, …
+│   ├── templates/               # HTML mẫu email / export
+│   ├── telemetry/               # log / metrics (nếu bật)
+│   └── config.py
+├── tests/
+├── server.py                    # ASGI: thêm src/ → import api.app:app
+├── pyproject.toml
+└── requirements.txt
 ```
 
 ---
 
-## Tài liệu trong repo này
+## StudentOps — luồng hoạt động (prototype trong repo)
 
-| File | Mô tả |
-|------|-------|
-| [`02-ux-exercise.md`](02-ux-exercise.md) | Đề bài UX workshop — hướng dẫn từng phần, tiêu chí nộp bài |
-| [`03-canvas-template.md`](03-canvas-template.md) | Template AI Product Canvas — dùng cho Canvas practice |
-| [`04-day5-cheatsheet.md`](04-day5-cheatsheet.md) | Tóm tắt 1 trang các framework từ lecture — tra cứu nhanh |
-| [`05-reference-document.md`](05-reference-document.md) | Tài liệu tham khảo chi tiết — 14 frameworks, expert insights |
+```text
+                    ┌─────────────────────────────────────────────────────────┐
+  Frontend / CLI    │  FastAPI (`src/api/app.py`)                              │
+       │            │  POST /chat  GET /meta  GET /health  GET /threads/…/history │
+       └──────────► │         │                                                │
+                    │         ▼                                                │
+                    │  `build_app(checkpointer)`  ←  PostgresSaver hoặc MemorySaver
+                    │         │                                                │
+                    │         ├── GOOGLE_API_KEY có  → ReAct agent (Gemini)     │
+                    │         │                    + tools: DB PostgreSQL (2),│
+                    │         │                      email, export (`src/graph/`)│
+                    │         │                                                │
+                    │         └── GOOGLE_API_KEY không → graph stub (demo `text`)│
+                    │                    │                                     │
+                    │                    ▼                                     │
+                    │  State trả về được serialize JSON (`messages` hoặc `text`) │
+                    └─────────────────────────────────────────────────────────┘
+```
 
----
-
-## Python / LangGraph (prototype) — cài đặt nhanh
-
-1. **Python** 3.10+ (khuyến nghị 3.11+).
-2. **Virtualenv** (từ thư mục gốc repo):
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-
-   Windows (PowerShell): `.\.venv\Scripts\Activate.ps1`
-
-3. **Cài package**: `pip install -r requirements.txt`
-4. **Biến môi trường**: `cp .env.example .env` rồi điền `DATABASE_URL` và/hoặc `GOOGLE_API_KEY` (tùy bạn muốn test phần nào).
-5. **PostgreSQL** (khi dùng checkpoint): URI dạng `postgresql://user:pass@host:5432/dbname`. Lần chạy đầu với `PostgresSaver`, `main.py` gọi `setup()` để tạo bảng checkpoint.
-6. **Thư mục `tools/`**: stub cho tool agent ↔ DB sau này; chưa có logic thật.
-
-**Phiên bản gói:** `requirements.txt` căn theo **LangGraph 1.0.x** và **`langgraph-checkpoint-postgres`** (import `from langgraph.checkpoint.postgres import PostgresSaver`, `PostgresSaver.from_conn_string`, `.setup()`), cùng **`langchain-google-genai`** + model Gemini mặc định `gemini-2.5-flash` như tài liệu hiện tại của LangChain Google.
+- **Checkpoint:** nếu có `DATABASE_URL` và kết nối OK lúc startup, LangGraph dùng **Postgres** để lưu thread; không thì **bộ nhớ trong process** (mất khi restart).
+- **Hai DB nghiệp vụ:** `vinuni_academic` / `vinuni_ctsv` trong `src/tools/postgres_readonly.py` (key kỹ thuật `academic` / `ctsv_booking`). Cùng hai URI `DATABASE_URL` / `CTSV_DATABASE_URL` như probe `/health` và checkpoint (có thể trùng server, khác database).
+- **API:** mô tả trong file HTTP API (bảng Artefact phía trên) và `GET /docs` khi server chạy.
 
 ---
 
-## Kiểm tra init (đảm bảo hoạt động đúng)
+## Chạy local (dev)
 
-Làm từ **thư mục gốc** repo, **venv đã bật** (`source .venv/bin/activate`).
+**Yêu cầu:** Python **3.12+** (theo `pyproject.toml`).
 
-### Bước 1 — Import và phiên bản gói
+### Cài dependency (khuyến nghị [uv](https://github.com/astral-sh/uv))
 
 ```bash
-python -c "from langgraph.checkpoint.postgres import PostgresSaver; from langchain_google_genai import ChatGoogleGenerativeAI; print('imports OK')"
+cd /path/to/C401-D5-Day-05-06
+uv sync
+uv sync --extra dev    # pytest — chỉ cần khi chạy test
 ```
 
-- **Pass**: in `imports OK` và không traceback.
-- **Lỗi** `No module named 'langgraph.checkpoint.postgres'`: cài thêm checkpoint Postgres — `pip install langgraph-checkpoint-postgres` (đã có trong `requirements.txt`; chạy lại `pip install -r requirements.txt`).
+Có thể dùng `pip install -e .` hoặc `pip install -r requirements.txt` nếu không dùng uv (bản `requirements.txt` ở gốc repo là tối thiểu).
 
-### Bước 2 — Chạy demo tích hợp (`main.py`)
+### Biến môi trường
 
 ```bash
-python main.py
+cp .env.example .env
 ```
 
-**Kịch bản A — Chưa cấu hình `.env` (hoặc trống key):**
+Điền tùy chọn:
 
-- Thấy `DATABASE_URL not set` và/hoặc `GOOGLE_API_KEY not set`.
-- **Bắt buộc pass**: dòng `Graph result (no checkpointer):` với `{'text': 'ab'}` (graph tối thiểu `node_a` → `node_b`).
+| Biến | Tác dụng |
+|------|----------|
+| `GOOGLE_API_KEY` | Bật **agent** ReAct + Gemini + tools; không có → **stub** demo |
+| `DATABASE_URL` | Postgres cho **checkpoint** thread + truy vấn agent DB học vụ (`academic`) |
+| `CTSV_DATABASE_URL` | Truy vấn agent CTSV (`ctsv_booking`) + **probe** trong `/health` |
+| `GEMINI_MODEL` | Mặc định `gemini-2.5-flash` |
+| `SMTP_*` | Gửi email thật qua tool (khi agent gọi) — xem `src/config.py` |
 
-**Kịch bản B — Có `DATABASE_URL` và Postgres chạy, DB tồn tại:**
+### `PYTHONPATH` (bắt buộc khi chạy từ gốc repo)
 
-- Thấy `connection OK: True`.
-- Thấy `Graph result (with PostgresSaver):` cùng kết quả state (ví dụ `text` kết thúc bằng `ab`).
-- **Nếu** `connection OK: False`: kiểm tra Postgres đã bật, user/password/database đúng, firewall/port `5432`.
-
-**Kịch bản C — Có `GOOGLE_API_KEY` (Gemini):**
-
-- Sau phần graph, thấy dòng `Gemini:` với nội dung trả lời ngắn.
-- **Lỗi API key / quota**: xem thông báo từ thư viện; xác nhận key tại [Google AI Studio](https://aistudio.google.com/apikey).
-
-### Bước 3 — Stub `tools/` (chỉ xác nhận package import được)
+Package ứng dụng nằm dưới `src/` (`config`, `api`, `tools`, …). Từ thư mục gốc, set:
 
 ```bash
-python -c "from tools.database import fetch_rows_stub"
+export PYTHONPATH=src
 ```
 
-- **Pass**: không in gì, thoát code 0.
-- **Kịch bản kiểm tra “chưa implement”** (tùy chọn): `python -c "from tools.database import fetch_rows_stub; fetch_rows_stub('SELECT 1')"` → phải raise `NotImplementedError` (đúng thiết kế stub).
+(Windows CMD: `set PYTHONPATH=src` — PowerShell: `$env:PYTHONPATH="src"`)
+
+Không set sẽ lỗi `ModuleNotFoundError: config` / `api`. Thư mục `tests/` tự thêm `src` qua `conftest.py`.
+
+### Chạy demo CLI (`scripts/demo.py`)
+
+```bash
+uv run python scripts/demo.py
+```
+
+(`scripts/demo.py` tự thêm `src/` vào `sys.path`; không cần `PYTHONPATH`.)
+
+- Không `DATABASE_URL`: in-memory checkpoint; stub → state kiểu `{'text': 'ab'}`.
+- Có `DATABASE_URL` + Postgres: `PostgresSaver` + `setup()`.
+- Có `GOOGLE_API_KEY` + **agent**: một lượt `invoke` với `HumanMessage("ping")` (một request Gemini). Lỗi **429 / quota** được in gợi ý thay vì traceback dài.
+- Có `GOOGLE_API_KEY` + **stub** (không agent): thêm một smoke `Gemini` ngắn (để test API khi graph không gọi LLM).
+- Free tier Gemini có giới hạn request/ngày — xem [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+
+### Chạy HTTP API (cho frontend)
+
+```bash
+uv run uvicorn server:app --reload --host 0.0.0.0 --port 8000
+```
+
+File **`server.py`** ở gốc repo chỉ thêm `src/` vào `sys.path` rồi import `api` — **không cần** `export PYTHONPATH=src` khi dùng lệnh này.
+
+Nếu vẫn muốn gọi trực tiếp module package: `PYTHONPATH=src uv run uvicorn api.app:app ...`
+
+- Swagger: **http://127.0.0.1:8000/docs**
+- Gợi ý flow: `GET /meta` → `POST /chat` → `GET /threads/{id}/history` (cùng file HTTP API ở bảng Artefact).
+
+### PostgreSQL (checkpoint)
+
+URI dạng `postgresql://user:pass@host:5432/dbname`. Lần đầu LangGraph tạo bảng checkpoint qua `PostgresSaver.setup()` trong lifespan.
+
+Script SQL mẫu cho dữ liệu nghiệp vụ (tuỳ nhóm): thư mục `database/` (`setup_academic.sql`, …). Cần schema khớp nếu agent gọi `execute_sql_tool`; không bắt buộc chỉ để chạy graph **stub** (không LLM).
 
 ---
 
-## Rời lớp Day 5, mỗi nhóm phải có
+## Kiểm tra nhanh
 
-1. Track đã chọn (VinFast / Vinmec / VinUni-VinSchool / XanhSM / Open)
-2. Problem statement 1 câu: "Ai gặp vấn đề gì, hiện giải thế nào, AI giúp được gì"
-3. Phân công ai làm phần nào trong Canvas
-4. SPEC draft submit trước 23h59 08/04
+### Import stack
 
----
+```bash
+PYTHONPATH=src uv run python -c "from langgraph.checkpoint.postgres import PostgresSaver; from langchain_google_genai import ChatGoogleGenerativeAI; print('imports OK')"
+```
 
-*Ngày 5 — VinUni A20 — AI Thực Chiến · 2026*
+### Chạy test (pytest)
+
+Cần `uv sync --extra dev` (hoặc cài `pytest` tương đương). Từ gốc repo:
+
+```bash
+uv run pytest tests/ -q
+```
+
+### Smoke API (server đã chạy)
+
+```bash
+curl -s http://127.0.0.1:8000/meta | jq .
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' -d '{"message":"hi"}' | jq .
+```

@@ -34,3 +34,7 @@ wheels/
 .DS_Store
 .idea/
 .vscode/
+test_tools_manual.py
+
+exports/
+logs/
