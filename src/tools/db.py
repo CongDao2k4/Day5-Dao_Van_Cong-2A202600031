@@ -73,7 +73,10 @@ DB_REGISTRY = [
 
 @tool
 def get_db_list() -> str:
-    """List the two logical databases (academic vs CTSV) and when to use each."""
+    """Bước 1 khi cần dữ liệu từ DB: liệt kê `vinuni_academic` vs `vinuni_ctsv` và mô tả.
+
+    Gọi **trước** khi chọn `db_id` cho `execute_sql_tool` nếu chưa chắc nên dùng DB nào.
+    """
     header = '## REGISTRY — 2 DATABASE (VinUni / SPEC hackathon)\n\n'
     entries = []
     for db in DB_REGISTRY:
@@ -323,13 +326,20 @@ def execute_sql(db_id: str, sql: str) -> dict[str, object]:
 
 @tool
 def get_db_schema_tool(db_id: str) -> str:
-    """Load schema text for `vinuni_academic` (Đào Tạo) or `vinuni_ctsv` (CTSV)."""
+    """Bước 2: lấy schema (bảng/cột) cho `db_id` trước khi viết SQL.
+
+    Bắt buộc gọi trước `execute_sql_tool` lần đầu với DB đó (trừ khi vừa gọi trong cùng lượt và đã nhớ).
+    """
     return get_db_schema(db_id)
 
 
 @tool
 def execute_sql_tool(db_id: str, sql: str) -> str:
-    """Execute read-only SELECT on mock DB; returns JSON with row_count and rows (SPEC UC1)."""
+    """Bước 3 — **nguồn sự thật duy nhất** cho số liệu: chạy SELECT read-only, trả JSON `row_count` + `rows`.
+
+    **Cấm** trả lời người dùng về MSSV, tên, GPA, học phí, số lượng sinh viên nếu chưa có kết quả từ tool này
+    (hoặc tool khác trả đúng dữ liệu nghiệp vụ). Mọi con số trong câu trả lời phải khớp JSON `rows`/`row_count`.
+    """
     payload = execute_sql(db_id, sql)
     return json.dumps(payload, ensure_ascii=False)
 
