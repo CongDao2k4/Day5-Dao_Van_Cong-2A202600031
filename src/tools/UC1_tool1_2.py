@@ -1,16 +1,8 @@
 import os
 import psycopg
 from langchain_core.tools import tool
-from langchain_google_genai import ChatGoogleGenerativeAI
-from config import get_database_url, get_google_api_key, get_gemini_model
+from config import get_database_url
 
-# 1. Model Initialization (Based on test_api.py)
-# def get_model():
-#     """Returns the LLM model configured for the project."""
-#     model_name = get_gemini_model()
-#     return ChatGoogleGenerativeAI(model=model_name)
-
-# 2. Tools Implementation (Based on postgres_checkpointer.py logic)
 
 @tool
 def get_db_schema_tool() -> str:
