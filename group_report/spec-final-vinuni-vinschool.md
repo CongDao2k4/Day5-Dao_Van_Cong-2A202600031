@@ -280,7 +280,7 @@ Tại sao?
 | **Task time reduction** | Thời gian hoàn thành tác vụ so với quy trình thủ công (baseline) | Giảm ≥ 50% thời gian trung bình | Khảo sát + timed test với 5 user (trước/sau) |
 | **Wrong send rate** | Tỉ lệ email gửi nhầm nội dung / nhầm người / sai danh sách trên tổng số email đã gửi | **Target: 0% trong pilot; chấp nhận tối đa < 0.1% ở vận hành thực tế, và 0 incident nghiêm trọng** | Incident log + manual spot-check (sample 5% email sent) |
 
-**Ưu tiên:** Precision hơn recall cho UC2. Sai nhầm (gửi email sai) tệ hơn bỏ sót (chưa gửi được). HIL là hàng rào cuối cùng.
+**Ưu tiên:** Recall hơn Precision  cho UC2. Sai nhầm (gửi email sai) tốt hơn bỏ sót (chưa gửi được). HIL là hàng rào cuối cùng.
 
 ---
 
@@ -398,17 +398,3 @@ Email sent to 27 recipients; tracking log updated
 Chi tiết phân công: [**assignment-tracking.md**](assignment-tracking.md)
 
 ---
-
-## Revision Log
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0-draft | 2024–XX–XX | Initial spec draft |
-| **1.0-final** | **2024–XX–XX** | Finalized: added detailed user stories (4 paths), expanded failure modes, added UI/UX details, clarified HIL design, ROI analysis |
-
----
-
-**Status:** **APPROVED FOR HACKATHON**
-
-All sections complete. Ready for implementation sprint.
-
