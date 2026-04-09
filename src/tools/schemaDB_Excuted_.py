@@ -3,7 +3,6 @@ import psycopg
 from langchain_core.tools import tool
 from config import get_database_url
 
-
 @tool
 def get_db_schema_tool() -> str:
     """
