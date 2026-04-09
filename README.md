@@ -298,9 +298,10 @@ hỏi triệu chứng cơ bản và gợi ý chuyên khoa phù hợp.
    Windows (PowerShell): `.\.venv\Scripts\Activate.ps1`
 
 3. **Cài package**: `pip install -r requirements.txt`
-4. **Biến môi trường**: `cp .env.example .env` rồi điền `DATABASE_URL` và/hoặc `GOOGLE_API_KEY` (tùy bạn muốn test phần nào).
+4. **Biến môi trường**: `cp .env.example .env` rồi điền `DATABASE_URL` (DB academic), tùy chọn `CTSV_DATABASE_URL` (DB CTSV đặt phòng), và/hoặc `GOOGLE_API_KEY`.
 5. **PostgreSQL** (khi dùng checkpoint): URI dạng `postgresql://user:pass@host:5432/dbname`. Lần chạy đầu với `PostgresSaver`, `main.py` gọi `setup()` để tạo bảng checkpoint.
-6. **Thư mục `tools/`**: stub cho tool agent ↔ DB sau này; chưa có logic thật.
+   - **Hai database (track VinUni + CTSV demo):** tạo hai DB (ví dụ `studentops_academic` và `studentops_ctsv`). Trên DB academic: `psql -f database/setup_academic.sql` rồi `database/mockdata_academic.sql`. Trên DB CTSV: `psql -f database/setup_ctsv_rooms.sql` rồi `database/mockdata_ctsv_rooms.sql`.
+6. **Thư mục `tools/`**: `get_db_schema_tool` / `sql_query_tool` (academic) và `get_ctsv_db_schema_tool` / `sql_ctsv_query_tool` (CTSV) khi đã set đủ biến môi trường.
 
 **Phiên bản gói:** `requirements.txt` căn theo **LangGraph 1.0.x** và **`langgraph-checkpoint-postgres`** (import `from langgraph.checkpoint.postgres import PostgresSaver`, `PostgresSaver.from_conn_string`, `.setup()`), cùng **`langchain-google-genai`** + model Gemini mặc định `gemini-2.5-flash` như tài liệu hiện tại của LangChain Google.
 

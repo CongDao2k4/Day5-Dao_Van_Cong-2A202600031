@@ -11,7 +11,14 @@ TlsMode = Literal['starttls', 'ssl']
 
 
 def get_database_url() -> str | None:
+    """PostgreSQL — DB academic (học vụ VinUni: students, GPA, học phí)."""
     url = os.getenv("DATABASE_URL")
+    return url.strip() if url else None
+
+
+def get_ctsv_database_url() -> str | None:
+    """PostgreSQL — DB CTSV đặt phòng (study_rooms, room_bookings). Tách URI, ví dụ studentops_ctsv."""
+    url = os.getenv("CTSV_DATABASE_URL")
     return url.strip() if url else None
 
 
