@@ -34,3 +34,5 @@ wheels/
 .DS_Store
 .idea/
 .vscode/
+test_api.py
+test_tools_manual.py
