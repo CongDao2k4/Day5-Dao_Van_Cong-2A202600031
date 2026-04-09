@@ -10,11 +10,20 @@ from src.telemetry.logger import logger
 
 @tool
 def export_data(
+<<<<<<< HEAD
     data: list[dict[str, Any]] | pd.DataFrame,
     format: str = 'csv',
     filename_prefix: str = 'export',
 ) -> str:
     """Exports the provided data to a CSV or Excel file.
+=======
+    data: Union[List[Dict[str, Any]], pd.DataFrame],
+    format: str = 'csv',
+    filename_prefix: str = 'export',
+) -> str:
+    """
+    Converts query results into CSV or Excel format.
+>>>>>>> 1d655af73804d04b06f36a4b1abc6d988559b331
 
     Args:
         data: The data to be exported; can be a pandas DataFrame or a list of dictionaries (rows).
