@@ -1,1 +1,3 @@
-"""Agent-facing database tools. Stubs only — implement queries and LangGraph tool wiring later."""
+from .email import email_draft_tool, email_sender_tool
+
+__all__ = ['email_draft_tool', 'email_sender_tool']
