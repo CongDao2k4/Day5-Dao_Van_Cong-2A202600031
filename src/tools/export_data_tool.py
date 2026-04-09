@@ -5,7 +5,7 @@ from typing import Any
 import pandas as pd
 from langchain_core.tools import tool
 
-from src.telemetry.logger import logger
+from telemetry.logger import logger
 
 
 @tool

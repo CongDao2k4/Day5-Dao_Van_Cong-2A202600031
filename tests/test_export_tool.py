@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import pytest
 
-from src.tools.export_data_tool import export_data
+from tools.export_data_tool import export_data
 
 
 @pytest.fixture
