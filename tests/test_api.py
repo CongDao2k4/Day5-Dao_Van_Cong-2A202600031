@@ -38,11 +38,22 @@ def test_health(client: TestClient) -> None:
     assert dbs['ctsv']['reachable'] is None
 
 
+def test_meta_stub_mode(client: TestClient) -> None:
+    r = client.get('/meta')
+    assert r.status_code == 200
+    m = r.json()
+    assert m['graph_mode'] == 'stub'
+    assert m['agent_enabled'] is False
+    assert m['checkpoint_backend'] == 'memory'
+    assert m['openapi_docs_url'] == '/docs'
+
+
 def test_chat_generates_thread_id(client: TestClient) -> None:
     r = client.post('/chat', json={'message': 'x'})
     assert r.status_code == 200
     data = r.json()
     assert 'thread_id' in data
+    assert data['graph_mode'] == 'stub'
     assert data['state']['text'] == 'xab'
 
 
