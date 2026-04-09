@@ -4,7 +4,9 @@ from typing import Any, Dict, List, Union
 
 import pandas as pd
 from langchain_core.tools import tool
+
 from src.telemetry.logger import logger
+
 
 @tool
 def export_data(
@@ -72,14 +74,14 @@ if __name__ == '__main__':
         },
     ]
 
-    # 2. Test xuất CSV
     print('\n[Test 1] Export CSV...')
     result_csv = export_data.invoke(
         {'data': mock_data, 'format': 'csv', 'filename_prefix': 'test_student_report'}
     )
     print(result_csv)
 
-    # 3. Test xuất Excel
     print('\n[Test 2] Export Excel...')
     result_excel = export_data.invoke(
-        {'data': mock_data, 'format': 'excel', 'filename_prefix': 'test_
+        {'data': mock_data, 'format': 'excel', 'filename_prefix': 'test_student_report'}
+    )
+    print(result_excel)
