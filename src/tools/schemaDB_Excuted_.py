@@ -97,11 +97,8 @@ def sql_query_tool(query: str) -> str:
                 
                 row_count = len(results)
                 final_output = "\n".join(res_output)
-                return f"Found {row_count} rows:\n\n{final_output}"
+                # return f"Found {row_count} rows:\n\n{final_output}"
+                return final_output
                 
     except Exception as e:
         return f"Database Error: {str(e)}"
-
-# Example of how to use these tools with an agent:
-# tools = [get_db_schema_tool, sql_query_tool]
-# model_with_tools = get_model().bind_tools(tools)
