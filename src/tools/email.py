@@ -5,6 +5,7 @@ from __future__ import annotations
 import smtplib
 import ssl
 from email.message import EmailMessage
+from typing import Any
 
 from config import (
     TlsMode,
@@ -74,7 +75,14 @@ def send_email_smtp(
     msg['Subject'] = subject
     msg['From'] = from_addr
     msg['To'] = to
-    msg.set_content(body)
+
+    # Detect if the body is HTML
+    if body.strip().lower().startswith('<!doctype html') or '<html' in body.lower():
+        # Set a plain text fallback
+        msg.set_content("Please use an HTML-compatible email client to view this message.")
+        msg.add_alternative(body, subtype='html')
+    else:
+        msg.set_content(body)
 
     context = ssl.create_default_context()
 
@@ -118,4 +126,48 @@ def send_email(to: str, subject: str, body: str) -> str:
     return send_email_smtp(to=to, subject=subject, body=body)
 
 
-EMAIL_TOOLS = [send_email]
+@tool
+def bulk_email_sender_tool(drafts: list[dict[str, str]]) -> dict[str, Any]:
+    """Execute bulk email sending based on a list of drafts.
+
+    Useful for mass notifications (Tuition, Results, etc.) after human confirmation.
+
+    Args:
+        drafts: A list of email drafts (each with email, subject, body).
+
+    Returns:
+        Summary of the bulk send operation (success/failure counts).
+    """
+    success_count = 0
+    fail_count = 0
+    results = []
+
+    for draft in drafts:
+        recipient = draft.get('email', '').strip()
+        if not recipient:
+            fail_count += 1
+            results.append({'status': 'failed', 'error': 'Missing email address'})
+            continue
+
+        res = send_email_smtp(
+            to=recipient,
+            subject=draft.get('subject', 'No Subject'),
+            body=draft.get('body', ''),
+        )
+
+        if res.startswith('Email sent successfully'):
+            success_count += 1
+            results.append({'email': recipient, 'status': 'sent'})
+        else:
+            fail_count += 1
+            results.append({'email': recipient, 'status': 'failed', 'error': res})
+
+    return {
+        'total': len(drafts),
+        'success': success_count,
+        'failed': fail_count,
+        'details': results,
+    }
+
+
+EMAIL_TOOLS = [send_email, bulk_email_sender_tool]

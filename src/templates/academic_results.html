@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Results Notification</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f0f2f5;
+            padding-bottom: 40px;
+        }
+
+        .main {
+            background-color: #ffffff;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+            border-spacing: 0;
+            font-family: sans-serif;
+            color: #4a4a4a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0056b3;
+            letter-spacing: -1px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .summary-box {
+            background: #f8fbff;
+            border: 1px solid #d0e3ff;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 25px 0;
+        }
+
+        .gpa-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #5f6368;
+            margin-bottom: 5px;
+        }
+
+        .gpa-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: #0056b3;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #d0e3ff;
+            padding-top: 15px;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1e21;
+        }
+
+        .footer {
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #8e8e8e;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <table class="main" width="100%">
+            <tr>
+                <td class="header">
+                    <div class="logo">VinUniversity</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <h1 class="title">Semester Results - {{term_code}}</h1>
+                    <p>Dear {{full_name}},</p>
+                    <p>Your academic performance review for the latest term is now available. Below is a summary of your
+                        results:</p>
+
+                    <div class="summary-box">
+                        <div class="gpa-label">Term GPA</div>
+                        <div class="gpa-value">{{term_gpa}}</div>
+
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Credits Earned</div>
+                                <div class="stat-value">{{credits_earned}} / {{credits_registered}}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Status</div>
+                                <div class="stat-value" style="color: #28a745;">Good Standing</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>You can view your full transcript and course-wise grades on the Student Portal.</p>
+                    <p>Congratulations on your hard work this semester!</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    Sent by the Office of the Registrar<br>
+                    VinUniversity, Hanoi, Vietnam
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

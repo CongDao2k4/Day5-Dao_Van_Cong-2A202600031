@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuition Fee Notification</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #004a99 0%, #007bff 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .student-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        .student-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .student-info strong {
+            color: #004a99;
+        }
+        .tuition-card {
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #d93025;
+            margin: 10px 0;
+        }
+        .due-date {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="color: white;">VinUniversity</h1>
+            <p style="color: rgba(255,255,255,0.8);">Tuition Fee Notification</p>
+        </div>
+        <div class="content">
+            <p class="greeting">Dear {{full_name}},</p>
+            <p>We are writing to provide you with an update regarding your tuition fees for the current term.</p>
+            
+            <div class="student-info">
+                <p><strong>Student ID:</strong> {{mssv}}</p>
+                <p><strong>Major:</strong> {{major}}</p>
+                <p><strong>Cohort:</strong> {{cohort}}</p>
+            </div>
+
+            <div class="tuition-card">
+                <p>Outstanding Amount Due</p>
+                <div class="amount">{{outstanding_tuition_vnd}} VND</div>
+                <p class="due-date">Payment Due Date: {{due_date}}</p>
+                <a href="#" class="btn">Pay Online Now</a>
+            </div>
+
+            <p>Please ensure that payment is made by the due date to avoid any late fees or registration holds. If you have already made the payment, please disregard this message.</p>
+            <p>If you have any questions, please contact the Registrar's Office.</p>
+            
+            <p>Best regards,<br>VinUniversity Finance Office</p>
+        </div>
+        <div class="footer">
+            &copy; 2026 VinUniversity. All rights reserved.<br>
+            Hanoi, Vietnam
+        </div>
+    </div>
+</body>
+</html>
