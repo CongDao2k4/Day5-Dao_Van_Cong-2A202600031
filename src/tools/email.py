@@ -75,7 +75,14 @@ def send_email_smtp(
     msg['Subject'] = subject
     msg['From'] = from_addr
     msg['To'] = to
-    msg.set_content(body)
+
+    # Detect if the body is HTML
+    if body.strip().lower().startswith('<!doctype html') or '<html' in body.lower():
+        # Set a plain text fallback
+        msg.set_content("Please use an HTML-compatible email client to view this message.")
+        msg.add_alternative(body, subtype='html')
+    else:
+        msg.set_content(body)
 
     context = ssl.create_default_context()
 
