@@ -282,74 +282,131 @@ hỏi triệu chứng cơ bản và gợi ý chuyên khoa phù hợp.
 | [`03-canvas-template.md`](03-canvas-template.md) | Template AI Product Canvas — dùng cho Canvas practice |
 | [`04-day5-cheatsheet.md`](04-day5-cheatsheet.md) | Tóm tắt 1 trang các framework từ lecture — tra cứu nhanh |
 | [`05-reference-document.md`](05-reference-document.md) | Tài liệu tham khảo chi tiết — 14 frameworks, expert insights |
+| [`docs/langgraph-http-api.md`](docs/langgraph-http-api.md) | HTTP API (Swagger `/docs`): chat, `/meta`, lịch sử thread — contract cho frontend |
+| [`group_report/spec-final-vinuni-vinschool.md`](group_report/spec-final-vinuni-vinschool.md) | SPEC nhóm — StudentOps AI (UC1/UC2, hai DB logic) |
 
 ---
 
-## Python / LangGraph (prototype) — cài đặt nhanh
+## StudentOps — luồng hoạt động (prototype trong repo)
 
-1. **Python** 3.10+ (khuyến nghị 3.11+).
-2. **Virtualenv** (từ thư mục gốc repo):
+```text
+                    ┌─────────────────────────────────────────────────────────┐
+  Frontend / CLI    │  FastAPI (`src/api/app.py`)                              │
+       │            │  POST /chat  GET /meta  GET /health  GET /threads/…/history │
+       └──────────► │         │                                                │
+                    │         ▼                                                │
+                    │  `build_app(checkpointer)`  ←  PostgresSaver hoặc MemorySaver
+                    │         │                                                │
+                    │         ├── GOOGLE_API_KEY có  → ReAct agent (Gemini)     │
+                    │         │                    + tools: DB mock (2 DB),     │
+                    │         │                      email, export (`graph.py`)│
+                    │         │                                                │
+                    │         └── GOOGLE_API_KEY không → graph stub (demo `text`)│
+                    │                    │                                     │
+                    │                    ▼                                     │
+                    │  State trả về được serialize JSON (`messages` hoặc `text`) │
+                    └─────────────────────────────────────────────────────────┘
+```
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-
-   Windows (PowerShell): `.\.venv\Scripts\Activate.ps1`
-
-3. **Cài package**: `pip install -r requirements.txt`
-4. **Biến môi trường**: `cp .env.example .env` rồi điền `DATABASE_URL` (DB academic), tùy chọn `CTSV_DATABASE_URL` (DB CTSV đặt phòng), và/hoặc `GOOGLE_API_KEY`.
-5. **PostgreSQL** (khi dùng checkpoint): URI dạng `postgresql://user:pass@host:5432/dbname`. Lần chạy đầu với `PostgresSaver`, `main.py` gọi `setup()` để tạo bảng checkpoint.
-   - **Hai database (track VinUni + CTSV demo):** tạo hai DB (ví dụ `studentops_academic` và `studentops_ctsv`). Trên DB academic: `psql -f database/setup_academic.sql` rồi `database/mockdata_academic.sql`. Trên DB CTSV: `psql -f database/setup_ctsv_rooms.sql` rồi `database/mockdata_ctsv_rooms.sql`.
-6. **Thư mục `tools/`**: `get_db_schema_tool` / `sql_query_tool` (academic) và `get_ctsv_db_schema_tool` / `sql_ctsv_query_tool` (CTSV) khi đã set đủ biến môi trường.
-
-**Phiên bản gói:** `requirements.txt` căn theo **LangGraph 1.0.x** và **`langgraph-checkpoint-postgres`** (import `from langgraph.checkpoint.postgres import PostgresSaver`, `PostgresSaver.from_conn_string`, `.setup()`), cùng **`langchain-google-genai`** + model Gemini mặc định `gemini-2.5-flash` như tài liệu hiện tại của LangChain Google.
+- **Checkpoint:** nếu có `DATABASE_URL` và kết nối OK lúc startup, LangGraph dùng **Postgres** để lưu thread; không thì **bộ nhớ trong process** (mất khi restart).
+- **Hai DB nghiệp vụ (mock trong agent):** `vinuni_academic` (Đào Tạo) và `vinuni_ctsv` (CTSV) — xem `src/tools/db.py`. Đây khác với hai URI `DATABASE_URL` / `CTSV_DATABASE_URL` (probe trong `/health`; có thể dùng chung DB cho checkpoint).
+- **Tài liệu API chi tiết:** [`docs/langgraph-http-api.md`](docs/langgraph-http-api.md) và `GET /docs` khi server chạy.
 
 ---
 
-## Kiểm tra init (đảm bảo hoạt động đúng)
+## Chạy local (dev)
 
-Làm từ **thư mục gốc** repo, **venv đã bật** (`source .venv/bin/activate`).
+**Yêu cầu:** Python **3.12+** (theo `pyproject.toml`).
 
-### Bước 1 — Import và phiên bản gói
-
-```bash
-python -c "from langgraph.checkpoint.postgres import PostgresSaver; from langchain_google_genai import ChatGoogleGenerativeAI; print('imports OK')"
-```
-
-- **Pass**: in `imports OK` và không traceback.
-- **Lỗi** `No module named 'langgraph.checkpoint.postgres'`: cài thêm checkpoint Postgres — `pip install langgraph-checkpoint-postgres` (đã có trong `requirements.txt`; chạy lại `pip install -r requirements.txt`).
-
-### Bước 2 — Chạy demo tích hợp (`main.py`)
+### Cài dependency (khuyến nghị [uv](https://github.com/astral-sh/uv))
 
 ```bash
-python main.py
+cd /path/to/C401-D5-Day-05-06
+uv sync
+uv sync --extra dev    # pytest — chỉ cần khi chạy test
 ```
 
-**Kịch bản A — Chưa cấu hình `.env` (hoặc trống key):**
+Có thể dùng `pip install -e .` hoặc `pip install -r requirements.txt` nếu không dùng uv (bản `requirements.txt` ở gốc repo là tối thiểu).
 
-- Thấy `DATABASE_URL not set` và/hoặc `GOOGLE_API_KEY not set`.
-- **Bắt buộc pass**: dòng `Graph result (no checkpointer):` với `{'text': 'ab'}` (graph tối thiểu `node_a` → `node_b`).
-
-**Kịch bản B — Có `DATABASE_URL` và Postgres chạy, DB tồn tại:**
-
-- Thấy `connection OK: True`.
-- Thấy `Graph result (with PostgresSaver):` cùng kết quả state (ví dụ `text` kết thúc bằng `ab`).
-- **Nếu** `connection OK: False`: kiểm tra Postgres đã bật, user/password/database đúng, firewall/port `5432`.
-
-**Kịch bản C — Có `GOOGLE_API_KEY` (Gemini):**
-
-- Sau phần graph, thấy dòng `Gemini:` với nội dung trả lời ngắn.
-- **Lỗi API key / quota**: xem thông báo từ thư viện; xác nhận key tại [Google AI Studio](https://aistudio.google.com/apikey).
-
-### Bước 3 — Stub `tools/` (chỉ xác nhận package import được)
+### Biến môi trường
 
 ```bash
-python -c "from tools.database import fetch_rows_stub"
+cp .env.example .env
 ```
 
-- **Pass**: không in gì, thoát code 0.
-- **Kịch bản kiểm tra “chưa implement”** (tùy chọn): `python -c "from tools.database import fetch_rows_stub; fetch_rows_stub('SELECT 1')"` → phải raise `NotImplementedError` (đúng thiết kế stub).
+Điền tùy chọn:
+
+| Biến | Tác dụng |
+|------|----------|
+| `GOOGLE_API_KEY` | Bật **agent** ReAct + Gemini + tools; không có → **stub** demo |
+| `DATABASE_URL` | Postgres cho **checkpoint** thread + `checkpoint_backend=postgres` trong `/meta` |
+| `CTSV_DATABASE_URL` | Chỉ dùng cho **probe** trong `/health` (CTSV) |
+| `GEMINI_MODEL` | Mặc định `gemini-2.5-flash` |
+| `SMTP_*` | Gửi email thật qua tool (khi agent gọi) — xem `src/config.py` |
+
+### `PYTHONPATH` (bắt buộc khi chạy từ gốc repo)
+
+Package ứng dụng nằm dưới `src/` (`config`, `api`, `tools`, …). Từ thư mục gốc, set:
+
+```bash
+export PYTHONPATH=src
+```
+
+(Windows CMD: `set PYTHONPATH=src` — PowerShell: `$env:PYTHONPATH="src"`)
+
+Không set sẽ lỗi `ModuleNotFoundError: config` / `api`. Thư mục `tests/` tự thêm `src` qua `conftest.py`.
+
+### Chạy demo CLI (`main.py`)
+
+```bash
+export PYTHONPATH=src   # nếu chưa set trong shell
+uv run python main.py
+```
+
+- Không `DATABASE_URL`: log in-memory checkpoint; stub → state kiểu `{'text': 'ab'}` (chuỗi rỗng qua hai node demo).
+- Có `DATABASE_URL` + Postgres: `PostgresSaver` + `setup()`; cùng kết quả state tùy stub/agent.
+- Có `GOOGLE_API_KEY`: thêm đoạn gọi Gemini trực tiếp (smoke); graph một lượt dùng `HumanMessage("ping")` nếu agent.
+
+### Chạy HTTP API (cho frontend)
+
+```bash
+export PYTHONPATH=src
+uv run uvicorn api.app:app --reload --host 0.0.0.0 --port 8000
+```
+
+`api.app` nằm trong `src/api/`; root repo cũng được thêm vào `sys.path` trong app để import `graph`, nhưng **`src` vẫn cần** cho `config` và package `api`.
+
+- Swagger: **http://127.0.0.1:8000/docs**
+- Gợi ý flow: `GET /meta` → `POST /chat` → `GET /threads/{id}/history` (mô tả trong [`docs/langgraph-http-api.md`](docs/langgraph-http-api.md)).
+
+### PostgreSQL (checkpoint)
+
+URI dạng `postgresql://user:pass@host:5432/dbname`. Lần đầu LangGraph tạo bảng checkpoint qua `PostgresSaver.setup()` trong lifespan.
+
+Script SQL mẫu cho dữ liệu nghiệp vụ (tuỳ nhóm): thư mục `database/` (`setup_academic.sql`, …) — **không** bắt buộc để chạy graph mock trong `src/tools/db.py`.
+
+---
+
+## Kiểm tra nhanh
+
+**Import stack:**
+
+```bash
+PYTHONPATH=src uv run python -c "from langgraph.checkpoint.postgres import PostgresSaver; from langchain_google_genai import ChatGoogleGenerativeAI; print('imports OK')"
+```
+
+**Test tự động:**
+
+```bash
+uv run pytest tests/ -q
+```
+
+**Smoke API** (server đã chạy):
+
+```bash
+curl -s http://127.0.0.1:8000/meta | jq .
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' -d '{"message":"hi"}' | jq .
+```
 
 ---
 
