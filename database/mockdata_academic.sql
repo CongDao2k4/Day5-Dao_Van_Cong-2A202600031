@@ -1,5 +1,5 @@
--- StudentOps AI — dữ liệu mẫu (PostgreSQL)
--- Chạy sau setup.sql. Idempotent: xóa dữ liệu cũ rồi nạp lại.
+-- StudentOps AI — dữ liệu mẫu DB Academic (PostgreSQL)
+-- Chạy sau setup_academic.sql. Idempotent: xóa dữ liệu cũ rồi nạp lại.
 
 BEGIN;
 

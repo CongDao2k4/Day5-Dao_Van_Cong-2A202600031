@@ -1,6 +1,8 @@
--- StudentOps AI — schema cho prototype VinUni/VinSchool
--- PostgreSQL 14+. Tài khoản ứng dụng NL-to-SQL: chỉ GRANT SELECT (read-only).
--- Chạy: psql -f setup.sql  (sau đó mockdata.sql)
+-- StudentOps AI — DB Academic (VinUni / học vụ: GPA, học phí, sinh viên)
+-- PostgreSQL 14+. Tài khoản NL-to-SQL: chỉ GRANT SELECT (read-only).
+-- Tạo DB: CREATE DATABASE studentops_academic;  \c studentops_academic
+-- Chạy: psql -f setup_academic.sql  (sau đó mockdata_academic.sql)
+-- Khóa nối với DB CTSV (đặt phòng): students.mssv = room_bookings.student_mssv
 
 BEGIN;
 
